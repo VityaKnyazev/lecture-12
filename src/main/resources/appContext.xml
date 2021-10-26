@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/context/ 
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<bean id="appLogger" class="org.slf4j.LoggerFactory"
+		factory-method="getLogger">
+		<constructor-arg value="App" />
+	</bean>
+
+	<bean id="categoriesDAOLogger" class="org.slf4j.LoggerFactory"
+		factory-method="getLogger">
+		<constructor-arg value="CategoriesDAO" />
+	</bean>
+
+	<bean id="saverLogger" class="org.slf4j.LoggerFactory"
+		factory-method="getLogger">
+		<constructor-arg value="Saver" />
+	</bean>
+
+	<bean id="selecterLogger" class="org.slf4j.LoggerFactory"
+		factory-method="getLogger">
+		<constructor-arg value="Selecter" />
+	</bean>
+	
+	<bean id="dbProperties" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location" value="classpath:database.properties" />
+    </bean>
+    
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="jdbcUrl" value="${jdbcUrl}" />
+		<property name="username" value="${dataSource.user}" />
+		<property name="password" value = "${dataSource.password}" />
+		<property name="maximumPoolSize" value = "${dataSource.maxPoolSize}" />
+		</bean> 
+	
+	<!-- To uncomment you should delete beans with id = dbProperties and id = hikariConfig above
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<constructor-arg type="String"
+			value="src/main/resources/database.properties" />
+	</bean> 
+	-->
+
+	<bean id="hikariDataSource"
+		class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+
+
+	<bean id="dbConnection"
+		class="by.itacademy.javaenterprise.knyazev.db.DbConnection"
+		factory-method="getDBO" lazy-init="false" scope="singleton">
+		<property name="hikariDataSource" ref="hikariDataSource" />
+	</bean>
+
+	<bean id="saver"
+		class="by.itacademy.javaenterprise.knyazev.queries.Saver">
+		<constructor-arg ref="dbConnection" />
+		<constructor-arg ref="saverLogger" />
+	</bean>
+
+	<bean id="selecter"
+		class="by.itacademy.javaenterprise.knyazev.queries.Selecter">
+		<constructor-arg ref="dbConnection" />
+		<constructor-arg ref="selecterLogger" />
+	</bean>
+
+	<bean id="categoriesDAO"
+		class="by.itacademy.javaenterprise.knyazev.dao.CategoriesDAO">
+		<constructor-arg index="0" ref="saver" />
+		<constructor-arg index="1" ref="selecter" />
+		<constructor-arg index="2" ref="categoriesDAOLogger" />
+	</bean>
+
+</beans> 
