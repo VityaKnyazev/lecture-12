@@ -6,10 +6,10 @@
 	<packaging>jar</packaging>
 
 	<groupId>by.itacademy.javaenterprise.knyazev</groupId>
-	<artifactId>lecture-11</artifactId>
+	<artifactId>lecture-12</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>lecture-11</name>
+	<name>lecture-12</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
