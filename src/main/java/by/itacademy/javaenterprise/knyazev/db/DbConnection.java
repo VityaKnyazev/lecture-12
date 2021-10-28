@@ -3,11 +3,13 @@ package by.itacademy.javaenterprise.knyazev.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import com.zaxxer.hikari.HikariDataSource;
 
 public class DbConnection {
 	
-	private HikariDataSource hikariDataSource;	
+	private DataSource hikariDataSource;	
 	private static DbConnection dbConnection;
 		
 	private DbConnection() { }
